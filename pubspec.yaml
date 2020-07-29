@@ -1,12 +1,13 @@
 name: fanoos_http
 description: A concise and robust Http client for Dart with no need for code generation or reflection.
 version: 1.0.0
-# homepage: https://www.example.com
+homepage: https://github.com/ali2236/fanoos_http
 
 environment:
-  sdk: '>=2.8.1 <3.0.0'
+  sdk: '>=2.2.0 <3.0.0'
 
 dependencies:
+  http: ^0.12.0
 
 
 dev_dependencies:

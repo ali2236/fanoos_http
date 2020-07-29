@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
 
 ///
@@ -175,7 +173,7 @@ Future<T> httpPatch<T>({
   T Function(dynamic parsedBody) onOk,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
-  FutureOr<T> onTimeout(),
+  FutureOr<T> Function() onTimeout,
 }){
   assert(url != null);
   return http.patch(url, headers: headers, body: body).then((response) {
@@ -200,7 +198,7 @@ T _handleResponse<T>({
   T Function(dynamic parsedBody) onOk,
   T Function(http.Response response) onResponse,
 }) {
-  if (response.statusCode == HttpStatus.ok) {
+  if (response.statusCode == 200) {
     return onOk != null
         ? onOk(bodyParser(response.body))
         : onResponse(response);
