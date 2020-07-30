@@ -19,24 +19,28 @@ Future<T> httpGet<T>({
   Map<String, String> headers,
   Function(String body) bodyParser = jsonDecode,
   T Function(dynamic parsedBody) onOk,
+  Function onError,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
-  return http.get(url, headers: headers).then((response) {
-    return _handleResponse(
-      response: response,
-      bodyParser: bodyParser,
-      onOk: onOk,
-      onResponse: onResponse,
-    );
-  }).timeout(
-    timeout,
-    onTimeout: onTimeout,
-  );
+  return http
+      .get(url, headers: headers)
+      .then((response) {
+        return _handleResponse(
+          response: response,
+          bodyParser: bodyParser,
+          onOk: onOk,
+          onResponse: onResponse,
+        );
+      })
+      .timeout(
+        timeout,
+        onTimeout: onTimeout,
+      )
+      .catchError(onError ?? (e) => null);
 }
-
 
 ///
 /// Sends a [post] http request to the provided [url].
@@ -58,24 +62,28 @@ Future<T> httpPost<T>({
   body,
   Function(String body) bodyParser = jsonDecode,
   T Function(dynamic parsedBody) onOk,
+  Function onError,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
-  return http.post(url, headers: headers, body: body).then((response) {
-    return _handleResponse(
-      response: response,
-      bodyParser: bodyParser,
-      onOk: onOk,
-      onResponse: onResponse,
-    );
-  }).timeout(
-    timeout,
-    onTimeout: onTimeout,
-  );
+  return http
+      .post(url, headers: headers, body: body)
+      .then((response) {
+        return _handleResponse(
+          response: response,
+          bodyParser: bodyParser,
+          onOk: onOk,
+          onResponse: onResponse,
+        );
+      })
+      .timeout(
+        timeout,
+        onTimeout: onTimeout,
+      )
+      .catchError(onError ?? (e) => null);
 }
-
 
 ///
 /// Sends a [put] http request to the provided [url].
@@ -97,24 +105,28 @@ Future<T> httpPut<T>({
   body,
   Function(String body) bodyParser = jsonDecode,
   T Function(dynamic parsedBody) onOk,
+  Function onError,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
   FutureOr<T> Function() onTimeout,
-}){
+}) {
   assert(url != null);
-  return http.put(url, headers: headers, body: body).then((response) {
-    return _handleResponse(
-      response: response,
-      bodyParser: bodyParser,
-      onOk: onOk,
-      onResponse: onResponse,
-    );
-  }).timeout(
-    timeout,
-    onTimeout: onTimeout,
-  );
+  return http
+      .put(url, headers: headers, body: body)
+      .then((response) {
+        return _handleResponse(
+          response: response,
+          bodyParser: bodyParser,
+          onOk: onOk,
+          onResponse: onResponse,
+        );
+      })
+      .timeout(
+        timeout,
+        onTimeout: onTimeout,
+      )
+      .catchError(onError ?? (e) => null);
 }
-
 
 ///
 /// Sends a [delete] http request to the provided [url].
@@ -133,22 +145,27 @@ Future<T> httpDelete<T>({
   Map<String, String> headers,
   Function(String body) bodyParser = jsonDecode,
   T Function(dynamic parsedBody) onOk,
+  Function onError,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
   FutureOr<T> Function() onTimeout,
-}){
+}) {
   assert(url != null);
-  return http.delete(url, headers: headers).then((response) {
-    return _handleResponse(
-      response: response,
-      bodyParser: bodyParser,
-      onOk: onOk,
-      onResponse: onResponse,
-    );
-  }).timeout(
-    timeout,
-    onTimeout: onTimeout,
-  );
+  return http
+      .delete(url, headers: headers)
+      .then((response) {
+        return _handleResponse(
+          response: response,
+          bodyParser: bodyParser,
+          onOk: onOk,
+          onResponse: onResponse,
+        );
+      })
+      .timeout(
+        timeout,
+        onTimeout: onTimeout,
+      )
+      .catchError(onError ?? (e) => null);
 }
 
 ///
@@ -171,27 +188,32 @@ Future<T> httpPatch<T>({
   body,
   Function(String body) bodyParser = jsonDecode,
   T Function(dynamic parsedBody) onOk,
+  Function onError,
   T Function(http.Response response) onResponse,
   Duration timeout = const Duration(minutes: 2),
   FutureOr<T> Function() onTimeout,
-}){
+}) {
   assert(url != null);
-  return http.patch(url, headers: headers, body: body).then((response) {
-    return _handleResponse(
-      response: response,
-      bodyParser: bodyParser,
-      onOk: onOk,
-      onResponse: onResponse,
-    );
-  }).timeout(
-    timeout,
-    onTimeout: onTimeout,
-  );
+  return http
+      .patch(url, headers: headers, body: body)
+      .then((response) {
+        return _handleResponse(
+          response: response,
+          bodyParser: bodyParser,
+          onOk: onOk,
+          onResponse: onResponse,
+        );
+      })
+      .timeout(
+        timeout,
+        onTimeout: onTimeout,
+      )
+      .catchError(onError ?? (e) => null);
 }
 
 ///
 /// The Backbone for the methods to work
-/// 
+///
 T _handleResponse<T>({
   http.Response response,
   Function(String body) bodyParser,
@@ -201,8 +223,8 @@ T _handleResponse<T>({
   if (response.statusCode == 200) {
     return onOk != null
         ? onOk(bodyParser(response.body))
-        : onResponse(response);
+        : onResponse != null ? onResponse(response) : null;
   } else {
-    return onResponse(response);
+    return onResponse != null ? onResponse(response) : null;
   }
 }
