@@ -8,23 +8,40 @@ class BlogClient {
         onOk: (json) => Post.fromJson(json),
       );
 
-  Future<List<Post>> getPosts() => httpGet(
-        url: '$host/posts',
-        onOk: (json) => json['posts'].map((p) => Post.fromJson(p)).toList(),
-      );
+  Future<List<Post>> getPosts() {
+    return httpGet<List<Post>>(
+      url: '$host/posts',
+      onOk: (json) {
+        return json['posts'].map((p) => Post.fromJson(p)).toList();
+      },
+      onResponse: (response) {
+        throw response.reasonPhrase;
+      },
+    );
+  }
 
-  Future<bool> postComment(int postId, Comment comment) => httpPost(
-        url: '$host/posts/$postId/comment',
-        body: comment.toJson(),
-        onOk: (_) => true,
-        onResponse: (_) => false,
-      );
+  Future<bool> postComment(
+    int postId,
+    String name,
+    String comment,
+  ) {
+    return httpPost(
+      url: '$host/posts/$postId/comments',
+      body: {
+        'name': name,
+        'comment': comment,
+      },
+      onOk: (_) => true,
+      // any other response other than 200
+      onResponse: (_) => false,
+    );
+  }
 
   Future<String> getRawMarkdown(int postId) => httpGet(
         url: '$host/posts/$postId/md',
         bodyParser: plainString,
         onOk: (md) => md,
-        onResponse: (response) => response.reasonPhrase,
+        onResponse: (response) => throw response.reasonPhrase,
       );
 }
 

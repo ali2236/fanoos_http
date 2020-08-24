@@ -15,12 +15,14 @@ const host = 'https://www.blog.com/api/v1';
 
 Future<Post> getPost(int id) => httpGet(
       url: '$host/posts/$id',
+      bodyParser: jsonDecode,
       onOk: (json) => Post.fromJson(json),
     );
 
 
 Future<List<Post>> getPosts() => httpGet(
       url: '$host/posts',
+      bodyParser: jsonDecode,
       onOk: (json) => json['posts'].map((p) => Post.fromJson(p)).toList(),
     );
 

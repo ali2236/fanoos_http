@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fanoos_http/fanoos_http.dart';
 import 'package:test/test.dart';
 import 'test.dart';
@@ -8,6 +10,7 @@ void main() {
       'simple',
       () async => await httpPost(
         url: 'https://reqres.in/api/users',
+        bodyParser: jsonDecode,
         body: {
           'name': 'aligator',
           'job': 'programmer',
@@ -19,6 +22,7 @@ void main() {
       'successful request',
       () async => await httpPost(
         url: 'https://reqres.in/api/register',
+        bodyParser: jsonDecode,
         body: {
           'email': 'aligator@test.com',
           'password': 'idontusepassword',

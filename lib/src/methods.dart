@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
+import 'package:fanoos_http/fanoos_http.dart';
 import 'package:http/http.dart' as http;
 
 ///
 /// Sends a [get] http request to the provided [url].
 ///
 /// The response from the request is parsed by the [bodyParser] function,
-/// by default this function is set to [jsonDecode]
+/// by default this function is set to [plainString]
 ///
 /// if the response status code is 200(ok) the [onOk] is called
 /// with the parsed body using the [bodyParser] function.
@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 Future<T> httpGet<T>({
   String url,
   Map<String, String> headers,
-  Function(String body) bodyParser = jsonDecode,
+  Function(String body) bodyParser = plainString,
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
@@ -48,7 +48,7 @@ Future<T> httpGet<T>({
 /// The [body] is the request body and can be a [String], [List<int>] or [Map<String, String>]
 ///
 /// The response from the request is parsed by the [bodyParser] function,
-/// by default this function is set to [jsonDecode]
+/// by default this function is set to [plainString]
 ///
 /// if the response status code is 200(ok) the [onOk] is called
 /// with the parsed body using the [bodyParser] function.
@@ -60,7 +60,7 @@ Future<T> httpPost<T>({
   String url,
   Map<String, String> headers,
   body,
-  Function(String body) bodyParser = jsonDecode,
+  Function(String body) bodyParser = plainString,
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
@@ -91,7 +91,7 @@ Future<T> httpPost<T>({
 /// The [body] is the request body and can be a [String], [List<int>] or [Map<String, String>]
 ///
 /// The response from the request is parsed by the [bodyParser] function,
-/// by default this function is set to [jsonDecode]
+/// by default this function is set to [plainString]
 ///
 /// if the response status code is 200(ok) the [onOk] is called
 /// with the parsed body using the [bodyParser] function.
@@ -103,7 +103,7 @@ Future<T> httpPut<T>({
   String url,
   Map<String, String> headers,
   body,
-  Function(String body) bodyParser = jsonDecode,
+  Function(String body) bodyParser = plainString,
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
@@ -132,7 +132,7 @@ Future<T> httpPut<T>({
 /// Sends a [delete] http request to the provided [url].
 ///
 /// The response from the request is parsed by the [bodyParser] function,
-/// by default this function is set to [jsonDecode]
+/// by default this function is set to [plainString]
 ///
 /// if the response status code is 200(ok) the [onOk] is called
 /// with the parsed body using the [bodyParser] function.
@@ -143,7 +143,7 @@ Future<T> httpPut<T>({
 Future<T> httpDelete<T>({
   String url,
   Map<String, String> headers,
-  Function(String body) bodyParser = jsonDecode,
+  Function(String body) bodyParser = plainString,
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
@@ -174,7 +174,7 @@ Future<T> httpDelete<T>({
 /// The [body] is the request body and can be a [String], [List<int>] or [Map<String, String>]
 ///
 /// The response from the request is parsed by the [bodyParser] function,
-/// by default this function is set to [jsonDecode]
+/// by default this function is set to [plainString]
 ///
 /// if the response status code is 200(ok) the [onOk] is called
 /// with the parsed body using the [bodyParser] function.
@@ -186,7 +186,7 @@ Future<T> httpPatch<T>({
   String url,
   Map<String, String> headers,
   body,
-  Function(String body) bodyParser = jsonDecode,
+  Function(String body) bodyParser = plainString,
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
@@ -220,11 +220,11 @@ T _handleResponse<T>({
   T Function(dynamic parsedBody) onOk,
   T Function(http.Response response) onResponse,
 }) {
-  if (response.statusCode == 200) {
-    return onOk != null
-        ? onOk(bodyParser(response.body))
-        : onResponse != null ? onResponse(response) : null;
+  if (response.statusCode == 200 && onOk != null) {
+    return onOk(bodyParser(response.body));
+  } else if (onResponse != null) {
+    return onResponse(response);
   } else {
-    return onResponse != null ? onResponse(response) : null;
+    return bodyParser(response.body);
   }
 }
