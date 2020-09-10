@@ -3,6 +3,12 @@ import 'package:fanoos_http/fanoos_http.dart';
 import 'package:http/http.dart' as http;
 
 ///
+/// The default timeout for the amount of time
+/// the client should wait for a [Response].
+///
+const default_timeout = Duration(seconds: 5);
+
+///
 /// Sends a [get] http request to the provided [url].
 ///
 /// The response from the request is parsed by the [bodyParser] function,
@@ -21,7 +27,7 @@ Future<T> httpGet<T>({
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
-  Duration timeout = const Duration(minutes: 2),
+  Duration timeout = default_timeout,
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
@@ -64,7 +70,7 @@ Future<T> httpPost<T>({
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
-  Duration timeout = const Duration(minutes: 2),
+  Duration timeout = default_timeout,
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
@@ -107,7 +113,7 @@ Future<T> httpPut<T>({
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
-  Duration timeout = const Duration(minutes: 2),
+  Duration timeout = default_timeout,
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
@@ -147,7 +153,7 @@ Future<T> httpDelete<T>({
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
-  Duration timeout = const Duration(minutes: 2),
+  Duration timeout = default_timeout,
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
@@ -190,7 +196,7 @@ Future<T> httpPatch<T>({
   T Function(dynamic parsedBody) onOk,
   Function onError,
   T Function(http.Response response) onResponse,
-  Duration timeout = const Duration(minutes: 2),
+  Duration timeout = default_timeout,
   FutureOr<T> Function() onTimeout,
 }) {
   assert(url != null);
